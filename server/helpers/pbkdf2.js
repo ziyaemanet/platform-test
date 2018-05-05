@@ -34,7 +34,6 @@ const hash = (password) => {
   return getRandomBytes()
     .then(salt => getHash(password, salt, false))
     .catch((err) => {
-      console.log('ERROR: ', err);
       if (err instanceof Error) {
         return Promise.reject('ERROR: UNKNOWN HASH GENERATION ERROR')
       }
@@ -49,7 +48,6 @@ const compare = (password, storedHash) => {
   return getHash(password, storedSalt, true)
     .then(requestHashBuffer => storedHashBuffer.compare(requestHashBuffer) === 0)
     .catch((err) => {
-      console.log('ERR: ', err);
       if (err instanceof Error) {
         return Promise.reject('ERROR: UNKNOWN HAS COMPARISON ERROR')
       }

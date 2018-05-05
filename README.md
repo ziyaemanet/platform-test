@@ -1,47 +1,101 @@
-# Fender Digital Platform Engineering Challenge
+## Intro
+Basic implementation of a skeleton web api with token based authentication/authorization.
 
-## Description
+https://localhost:8080 - redirects to https server
+https://localhost:8443 - main https server, use this
 
-Design and implement a RESTful web service to facilitate a user authentication system. The authentication mechanism should be *token based*. Requests and responses should be in **JSON**.
-
-## Requirements
-
-**Models**
-
-The **User** model should have the following properties (at minimum):
-
-1. name
-2. email
-3. password
-
-You should determine what, *if any*, additional models you will need.
+Note: Using Postman to test you will need to disable SSL certificate verification for the dummy credentials included with this repo. This option can be found in Settings > General > Request.
 
 **Endpoints**
 
-All of these endpoints should be written from a user's perspective.
+*https://localhost:8443/user* - post
+Request a new user, emails must be unique.
+ - Request headers:
+    * Content-type: application/json
+ - Request body:
+    {
+      "name": "NAME",
+      "email": "EMAIL",
+      "password": "PASSWORD"
+    }
+ - Response body:
+    {
+      "token": "TOKEN"
+    }
 
-1. **User** Registration
-2. Login (*token based*) - should return a token, given *valid* credentials
-3. Logout - logs a user out
-4. Update a **User**'s Information
-5. Delete a **User**
+*https://localhost:8443/user* - get
+Request users information.
+ - Request headers:
+    * Authorization: Bearer TOKEN
+ - Response body:
+    {
+      "id": "ID",
+      "name": "NAME",
+      "email": "EMAIL",
+      "v": 0
+    }
 
-**README**
+*https://localhost:8443/user* - put
+Update a users information. Provide all three: name, email, and password.
+ - Request headers:
+    * Content-type: application/json
+    * Authorization: Bearer TOKEN
+ - Request body:
+     {
+       "name": "NAME",
+       "email": "EMAIL",
+       "password": "PASSWORD"
+     }
+ - Response body: UPDATE USER SUCCESS
 
-Please include:
-- a readme file that explains your thinking
-- how to setup and run the project
-- if you chose to use a database, include instructions on how to set that up
-- if you have tests, include instructions on how to run them
-- a description of what enhancements you might make if you had more time.
+ *https://localhost:8443/user* - delete
+ Delete a user account.
+  - Request headers:
+     * Authorization: Bearer TOKEN
+  - Response body: YOUR TOKEN AND/OR USER HAS BEEN REVOKED
 
-**Additional Info**
+ *https://localhost:8443/login* - post
+ Request a new token.
+  - Request headers:
+     * Content-type: application/json
+  - Request body:
+      {
+        "email": "EMAIL",
+        "password": "PASSWORD"
+      }
+  - Response body:
+      {
+        "token": "TOKEN"
+      }
 
-- We expect this project to take a few hours to complete
-- You can use Rails/Sinatra, Python, Go, node.js or shiny-new-framework X, as long as you tell us why you chose it and how it was a good fit for the challenge. 
-- Feel free to use whichever database you'd like; we suggest Postgres. 
-- Bonus points for security, specs, etc. 
-- Do as little or as much as you like.
+  *https://localhost:8443/logout* - delete
+  Revoke the requesting token.
+  - Request headers:
+    * Authorization: Bearer TOKEN
+  - Response body: YOUR TOKEN AND/OR USER HAS BEEN REVOKED
 
-Please fork this repo and commit your code into that fork.  Show your work and process through those commits.
+## Database
+A free sandbox mongodb instance is hosted via mlab. Connect somewhere else if you'd like.
 
+## Setup
+1. Install the node LTS version at https://nodejs.org/en/
+2. Clone this repo
+2. Open terminal to this repos root directory
+3. In the terminal from above run command 'npm i' to install dependencies
+4. In the terminal from above run command 'npm start' to start the server
+5. Test with a tool such as Postman
+
+## Enhancements
+1. Add unit and functional tests.
+2. There should only be one active token per user at a time.
+3. Move secrets, key, etc to environment variables/files, where they belong (in code for ease of setup).
+4. TTL for revoked tokens to expire after exp claim.
+5. Update user should revoke the token it was invoked with and return a new token
+6. Add logging
+7. Improve error handling
+8. Improve responses
+9. Refactor revoke.add so it can be added more easily to other models
+10. Validate input data
+11. Modularization changes
+12. Log in should return a used but unexpired token or revoke and return a new token.
+...
