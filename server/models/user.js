@@ -19,6 +19,7 @@ const getUser = (req, res) => {
   user.findOne({ email: req.user.email })
     .then((mongoRes) => {
       console.log('MONGO RES: ', mongoRes);
+      delete mongoRes.password;
       res.handle(null, mongoRes);
     })
     .catch((err) => {

@@ -11,7 +11,7 @@ module.exports = (req, res) => {
       if (isValidPassword) {
         res.handle(null, {
           message: 'A token for your efforts...',
-          token: token.get(email),
+          token: token.generate(email),
         });
       } else {
         return Promise.reject('INVALID PASSWORD');
