@@ -6,7 +6,7 @@ const morgan = require('morgan');
 // const path = require('path');
 const fs = require('fs');
 // require('dotenv').config();
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 // const jwt = require('express-jwt');
 // const jwksRsa = require('jwks-rsa');
 
@@ -32,11 +32,11 @@ const sslCert = {
 };
 
 // configure mongoose
-// mongoose.Promise = Promise;
-// const MONGODB_URI = 'mongodb://127.0.0.1/test';
-// mongoose.connect(MONGODB_URI, (err) => {
-//   console.log(err || `Mongo connected to ${MONGODB_URI}`);
-// });
+mongoose.Promise = Promise;
+const MONGODB_URI = 'mongodb://user:password@ds014658.mlab.com:14658/dbtest';
+mongoose.connect(MONGODB_URI, (err) => {
+  console.log(err || 'Mongo connected');
+});
 
 // server to redirect http to https
 const appHTTP = express();
@@ -64,7 +64,7 @@ server.listen(PORT, (err) => {
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
 
@@ -74,17 +74,18 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('*', (req, res, next) => {
-  console.log('req.headers: ', req.headers);
-  next();
-});
+// app.use('*', (req, res, next) => {
+//   console.log('req.headers: ', req.headers);
+//   next();
+// });
 
-app.use('*', (req, res) => {
-  res.handle(null, 'SUCCESS');
-  console.log('SENDING!');
-  // res.end();
-});
+// app.use('*', (req, res, next) => {
+//   res.handle(null, 'SUCCESS');
+//   console.log('SENDING!');
+//   next();
+//   // res.end();
+// });
 
-// app.use('/user', checkJwt, require('./routes/user'));
+app.use('/user', require('./routes/user'));
 // app.use('/logout', checkJwt, require('./routes/logout'));
 // app.use('/login', checkJwt, require('./routes/login'));
