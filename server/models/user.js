@@ -23,7 +23,6 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   user.findOne({ email: req.user.email })
     .then((mongoRes) => {
-      // const response = Object.assign({}, mongoRes._doc);
       delete mongoRes._doc.password;
       res.handle(null, mongoRes);
     })
