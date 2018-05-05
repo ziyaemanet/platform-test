@@ -18,7 +18,6 @@ module.exports = (req, res) => {
       }
     })
     .catch((err) => {
-      console.log('ERR LOGIN: ', err);
       if (err instanceof Error) {
         res.handle('UNKNOWN ERROR DURING LOGIN');
       } else {

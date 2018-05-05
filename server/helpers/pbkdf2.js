@@ -36,7 +36,7 @@ const hash = (password) => {
     .catch((err) => {
       console.log('ERROR: ', err);
       if (err instanceof Error) {
-        return Promise.reject('ERROR: UNKNOWN ERROR')
+        return Promise.reject('ERROR: UNKNOWN HASH GENERATION ERROR')
       }
       return Promise.reject(err);
     });
@@ -51,7 +51,7 @@ const compare = (password, storedHash) => {
     .catch((err) => {
       console.log('ERR: ', err);
       if (err instanceof Error) {
-        return Promise.reject('ERROR: UNKNOWN ERROR')
+        return Promise.reject('ERROR: UNKNOWN HAS COMPARISON ERROR')
       }
       return Promise.reject(err);
     });

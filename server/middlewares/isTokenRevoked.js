@@ -1,6 +1,6 @@
 const revoke = require('../helpers/revokeSchema');
 
-const isTokenRevoked = (req, res, next) => {
+module.exports = (req, res, next) => {
   revoke.findOne({ token: req.headers.authorization })
     .then((mongoRes) => {
       if (mongoRes) {
@@ -9,13 +9,7 @@ const isTokenRevoked = (req, res, next) => {
         next();
       }
     })
-    .catch((err) => {
-      if (err instanceof Error) {
-        res.handle('UNKNOWN ERROR WHILE CHECKING IF REVOKED TOKEN');
-      } else {
-        res.handle(err);
-      }
+    .catch(() => {
+      res.handle('UNKNOWN ERROR WHILE CHECKING IF REVOKED TOKEN');
     });
 };
-
-module.exports = isTokenRevoked;

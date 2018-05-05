@@ -1,27 +1,10 @@
-const PORT = process.env.PORT || 8443;
+const PORT = 8443;
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const express = require('express');
 const morgan = require('morgan');
-// const path = require('path');
 const fs = require('fs');
-// require('dotenv').config();
 const mongoose = require('mongoose');
-// const jwt = require('express-jwt');
-// const jwksRsa = require('jwks-rsa');
-
-// const checkJwt = jwt({
-//   secret: jwksRsa.expressJwtSecret({
-//     cache: true,
-//     rateLimit: true,
-//     jwksRequestsPerMinute: 5,
-//     jwksUri: '',
-//   }),
-//   // Validate the audience and the issuer.
-//   audience: 'https://localhost:8443',
-//   issuer: 'https://localhost:8443',
-//   algorithms: ['RS256'],
-// });
 
 const sslCert = {
   key: fs.readFileSync(`${__dirname}/../server.key`),
@@ -64,8 +47,6 @@ server.listen(PORT, (err) => {
 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, '../public')));
 app.use(cors());
 
 // error/send handle
@@ -74,19 +55,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use('*', (req, res, next) => {
-//   console.log('req.headers: ', req.headers);
-//   next();
-// });
-
-// app.use('*', (req, res, next) => {
-//   res.handle(null, 'SUCCESS');
-//   console.log('SENDING!');
-//   next();
-//   // res.end();
-// });
-
-// TODO: check jwt
 app.use('/user', require('./routes/user'));
 app.use('/logout', require('./routes/logout'));
 app.use('/login', require('./routes/login'));

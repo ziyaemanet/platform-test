@@ -1,31 +1,32 @@
 const user = require('../helpers/userSchema');
+const revoke = require('./revoke');
+const token = require('../helpers/token');
 const pbkdf2 = require('../helpers/pbkdf2');
 
 const createUser = (req, res) => {
   const { password, email, name } = req.body;
   pbkdf2.hash(password)
     .then(hash => user.create({ name, email, password: hash }))
-    .then((mongoRes) => {
-      console.log('MONGO RES: ', mongoRes);
-      res.handle(null, 'CREATE USER SUCCESS!');
-    })
+    .then(() => res.handle(null, {
+      message: 'A token for your efforts...',
+      token: token.generate(email),
+    }))
     .catch((err) => {
-      console.log('ERR CREATEUSER: ', err);
-      res.handle(err);
+      if (err instanceof Error) {
+        res.handle('UNKNOWN ERROR DURING CREATE USER');
+      } else {
+        res.handle(err);
+      }
     });
 };
 
 const getUser = (req, res) => {
   user.findOne({ email: req.user.email })
     .then((mongoRes) => {
-      console.log('MONGO RES: ', mongoRes);
       delete mongoRes.password;
       res.handle(null, mongoRes);
     })
-    .catch((err) => {
-      console.log('ERR GET USER: ', err);
-      res.handle(err);
-    });
+    .catch(() => res.handle('UNKNOWN ERROR WITH GET USER'));
 };
 
 const updateUser = (req, res) => {
@@ -35,27 +36,20 @@ const updateUser = (req, res) => {
       { email: req.user.email },
       { name, email, password: hash }
     ))
-    .then((mongoRes) => {
-      console.log('MONGO RES: ', mongoRes);
-      res.handle(null, 'UPDATE USER SUCCESS!');
-    })
+    .then(() => res.handle(null, 'UPDATE USER SUCCESS'))
     .catch((err) => {
-      console.log('ERR UPDATE USER: ', err);
-      res.handle(err);
+      if (err instanceof Error) {
+        res.handle('UNKNOWN ERROR DURING UPDATE USER');
+      } else {
+        res.handle(err);
+      }
     });
 };
 
 const deleteUser = (req, res) => {
-  //  TODO: revoke token
   user.deleteOne({ email: req.user.email })
-    .then((mongoRes) => {
-      console.log('MONGO RES: ', mongoRes);
-      res.handle(null, 'DELETE USER SUCCESS!');
-    })
-    .catch((err) => {
-      console.log('ERR DELETE USER: ', err);
-      res.handle(err);
-    });
+    .then(() => revoke.add(req, res))
+    .catch(() => res.handle('ERROR DURING DELETE USER'));
 };
 
 module.exports = {
