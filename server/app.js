@@ -86,6 +86,7 @@ app.use((req, res, next) => {
 //   // res.end();
 // });
 
+// TODO: check jwt
 app.use('/user', require('./routes/user'));
-// app.use('/logout', checkJwt, require('./routes/logout'));
-// app.use('/login', checkJwt, require('./routes/login'));
+// app.use('/logout', require('./routes/logout'));
+app.use('/login', require('./routes/login'));

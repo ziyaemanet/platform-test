@@ -1,16 +1,7 @@
-const mongoose = require('mongoose');
+const user = require('../helpers/userSchema');
 const pbkdf2 = require('../helpers/pbkdf2');
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-}, { minimize: false });
-
-const user = mongoose.model('users', userSchema);
-
 const createUser = (req, res) => {
-  console.log('REQUEST: ', req.body);
   const { password, email, name } = req.body;
   pbkdf2.hash(password)
     .then(hash => user.create({ name, email, password: hash }))
@@ -25,9 +16,7 @@ const createUser = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  const { name } = req.body;
-  //  TODO: change target to name in token
-  user.findOne({ name })
+  user.findOne({ email: req.user.email })
     .then((mongoRes) => {
       console.log('MONGO RES: ', mongoRes);
       res.handle(null, mongoRes);
@@ -40,9 +29,11 @@ const getUser = (req, res) => {
 
 const updateUser = (req, res) => {
   const { password, email, name } = req.body;
-  //  TODO: change target to name in token
   pbkdf2.hash(password)
-    .then(hash => user.updateOne({ name }, { name, email, password: hash }))
+    .then(hash => user.updateOne(
+      { email: req.user.email },
+      { name, email, password: hash }
+    ))
     .then((mongoRes) => {
       console.log('MONGO RES: ', mongoRes);
       res.handle(null, 'UPDATE USER SUCCESS!');
@@ -54,9 +45,8 @@ const updateUser = (req, res) => {
 };
 
 const deleteUser = (req, res) => {
-  const { name } = req.body;
-  //  TODO: change target to name in token
-  user.deleteOne({ name })
+  //  TODO: revoke token
+  user.deleteOne({ email: req.user.email })
     .then((mongoRes) => {
       console.log('MONGO RES: ', mongoRes);
       res.handle(null, 'DELETE USER SUCCESS!');

@@ -5,17 +5,17 @@ const SALT_LEN = 16;
 const ITERATIONS = 10000;
 const DIGEST = 'sha256';
 
-const getHash = (password, salt) => new Promise((resolve, reject) => {
+const getHash = (password, salt, isBuffer) => new Promise((resolve, reject) => {
   crypto.pbkdf2(password, salt, ITERATIONS, KEY_LEN, DIGEST, (err, key) => {
     if (err) {
-      reject('ERROR: FAILED TO DURING HASHING');
+      reject('ERROR: FAILED DURING HASHING');
     } else {
       const buffer = Buffer.alloc(SALT_LEN + KEY_LEN);
 
       salt.copy(buffer);
       key.copy(buffer, salt.length);
 
-      resolve(buffer.toString('base64'));
+      resolve(isBuffer ? buffer : buffer.toString('base64'));
     }
   });
 });
@@ -32,7 +32,7 @@ const getRandomBytes = () => new Promise((resolve, reject) => {
 
 const hash = (password) => {
   return getRandomBytes()
-    .then(salt => getHash(password, salt))
+    .then(salt => getHash(password, salt, false))
     .catch((err) => {
       console.log('ERROR: ', err);
       if (err instanceof Error) {
@@ -43,7 +43,18 @@ const hash = (password) => {
 };
 
 const compare = (password, storedHash) => {
-  console.log('COMPARE!');
+  const storedHashBuffer = Buffer.from(storedHash, 'base64');
+  const storedSalt = storedHashBuffer.slice(0, SALT_LEN);
+
+  return getHash(password, storedSalt, true)
+    .then(requestHashBuffer => storedHashBuffer.compare(requestHashBuffer) === 0)
+    .catch((err) => {
+      console.log('ERR: ', err);
+      if (err instanceof Error) {
+        return Promise.reject('ERROR: UNKNOWN ERROR')
+      }
+      return Promise.reject(err);
+    });
 };
 
 module.exports = { hash, compare };
