@@ -6,7 +6,13 @@ module.exports = (req, res) => {
   const { password, email } = req.body;
 
   user.findOne({ email })
-    .then(mongoRes => pbkdf2.compare(password, mongoRes.password))
+    .then((mongoRes) => {
+      if (!mongoRes) {
+        // email does not exist
+        return Promise.reject('INVALID PASSWORD OR EMAIL');
+      }
+      return pbkdf2.compare(password, mongoRes.password);
+    })
     .then((isValidPassword) => {
       if (isValidPassword) {
         res.handle(null, {
@@ -14,7 +20,8 @@ module.exports = (req, res) => {
           token: token.generate(email),
         });
       } else {
-        return Promise.reject('INVALID PASSWORD');
+        // bad password
+        return Promise.reject('INVALID PASSWORD OR EMAIL');
       }
     })
     .catch((err) => {

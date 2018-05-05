@@ -23,7 +23,8 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   user.findOne({ email: req.user.email })
     .then((mongoRes) => {
-      delete mongoRes.password;
+      // const response = Object.assign({}, mongoRes._doc);
+      delete mongoRes._doc.password;
       res.handle(null, mongoRes);
     })
     .catch(() => res.handle('UNKNOWN ERROR WITH GET USER'));
