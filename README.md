@@ -7,9 +7,9 @@ https://localhost:8443 - main https server, use this
 
 Note: Using Postman to test you will need to disable SSL certificate verification for the dummy credentials included with this repo. This option can be found in Settings > General > Request.
 
-**Endpoints**
+## Endpoints
 
-***https://localhost:8443/user*** - post
+***https://localhost:8443/user*** - **post**
 
 Request a new user, emails must be unique.
  - Request headers:
@@ -25,7 +25,7 @@ Request a new user, emails must be unique.
       "token": "TOKEN"
     }
 
-*https://localhost:8443/user* - get
+***https://localhost:8443/user*** - **get**
 
 Request users information.
  - Request headers:
@@ -38,7 +38,7 @@ Request users information.
       "v": 0
     }
 
-*https://localhost:8443/user* - put
+***https://localhost:8443/user*** - **put**
 
 Update a users information. Provide all three: name, email, and password.
  - Request headers:
@@ -52,14 +52,14 @@ Update a users information. Provide all three: name, email, and password.
      }
  - Response body: UPDATE USER SUCCESS
 
- *https://localhost:8443/user* - delete
+ ***https://localhost:8443/user*** - **delete**
 
  Delete a user account.
   - Request headers:
      * Authorization: Bearer TOKEN
   - Response body: YOUR TOKEN AND/OR USER HAS BEEN REVOKED
 
- *https://localhost:8443/login* - post
+ ***https://localhost:8443/login*** - **post**
 
  Request a new token.
   - Request headers:
@@ -74,7 +74,7 @@ Update a users information. Provide all three: name, email, and password.
         "token": "TOKEN"
       }
 
-  *https://localhost:8443/logout* - delete
+  ***https://localhost:8443/logout*** - **delete**
 
   Revoke the requesting token.
   - Request headers:
@@ -105,4 +105,4 @@ A free sandbox mongodb instance is hosted via mlab. Connect somewhere else if yo
 10. Validate input data
 11. Modularization changes
 12. Log in should return a used but unexpired token or revoke and return a new token.
-...
+13. More...
