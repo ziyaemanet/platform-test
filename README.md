@@ -102,7 +102,7 @@ A free sandbox mongodb instance is hosted via mlab. Connect somewhere else if yo
 7. Improve error handling
 8. Improve responses
 9. Refactor revoke.add so it can be added more easily to other models
-10. Validate input data
+10. Validate/sanitize inputs
 11. Modularization changes
 12. Log in should return a used but unexpired token or revoke and return a new token
 13. Checking mongo db each time for revoked tokens will be slow, put blacklisted tokens in memory
