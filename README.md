@@ -1,7 +1,7 @@
 ## Intro
 Basic implementation of a skeleton web api with token based authentication/authorization.
 
-***https://localhost:8080*** - redirects to https server
+***http://localhost:8080*** - http server redirects to https server
 
 ***https://localhost:8443*** - main https server, use this
 
@@ -105,4 +105,5 @@ A free sandbox mongodb instance is hosted via mlab. Connect somewhere else if yo
 10. Validate input data
 11. Modularization changes
 12. Log in should return a used but unexpired token or revoke and return a new token
-13. more...
+13. Checking mongo db each time for revoked tokens will be slow, put blacklisted tokens in memory
+14. more...
