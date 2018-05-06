@@ -2,6 +2,7 @@
 Basic implementation of a skeleton web api with token based authentication/authorization.
 
 https://localhost:8080 - redirects to https server
+
 https://localhost:8443 - main https server, use this
 
 Note: Using Postman to test you will need to disable SSL certificate verification for the dummy credentials included with this repo. This option can be found in Settings > General > Request.
@@ -9,6 +10,7 @@ Note: Using Postman to test you will need to disable SSL certificate verificatio
 **Endpoints**
 
 *https://localhost:8443/user* - post
+
 Request a new user, emails must be unique.
  - Request headers:
     * Content-type: application/json
@@ -24,6 +26,7 @@ Request a new user, emails must be unique.
     }
 
 *https://localhost:8443/user* - get
+
 Request users information.
  - Request headers:
     * Authorization: Bearer TOKEN
@@ -36,6 +39,7 @@ Request users information.
     }
 
 *https://localhost:8443/user* - put
+
 Update a users information. Provide all three: name, email, and password.
  - Request headers:
     * Content-type: application/json
@@ -49,12 +53,14 @@ Update a users information. Provide all three: name, email, and password.
  - Response body: UPDATE USER SUCCESS
 
  *https://localhost:8443/user* - delete
+
  Delete a user account.
   - Request headers:
      * Authorization: Bearer TOKEN
   - Response body: YOUR TOKEN AND/OR USER HAS BEEN REVOKED
 
  *https://localhost:8443/login* - post
+
  Request a new token.
   - Request headers:
      * Content-type: application/json
@@ -69,6 +75,7 @@ Update a users information. Provide all three: name, email, and password.
       }
 
   *https://localhost:8443/logout* - delete
+
   Revoke the requesting token.
   - Request headers:
     * Authorization: Bearer TOKEN
